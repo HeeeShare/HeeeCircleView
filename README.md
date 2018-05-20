@@ -1,2 +1,2 @@
 # HeeeCircleView
-用法相见demo！
+用法见demo！
