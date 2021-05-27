@@ -17,8 +17,7 @@
     CGFloat didCompleteProgress;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, MIN(frame.size.width, frame.size.height), MIN(frame.size.width, frame.size.height))];
     if (self) {
         _lineWidth = 10;
@@ -80,6 +79,11 @@
         layer.lineCap = kCALineCapButt;
     }
     
+    if (animateTimer) {
+        [animateTimer invalidate];
+        animateTimer = nil;
+    }
+    
     if (_duration == 0) {
         animate = NO;
     }
@@ -88,11 +92,6 @@
         endAngle = _startAngle + (_clockwise?lastProgress:(-lastProgress));
     }else{
         endAngle = _startAngle + (_clockwise?_progress:(-_progress));
-    }
-    
-    if (animateTimer) {
-        [animateTimer invalidate];
-        animateTimer = nil;
     }
     
     if (animate) {
@@ -112,7 +111,7 @@
     didCompleteProgress+=fabs(unit);
     
     CGFloat offset = fabs(didCompleteProgress - fabs(self.progress - lastProgress));
-    if (offset < fabs(unit) && offset > 0) {
+    if (_progress <= 0 || _progress > 1 || (offset < fabs(unit) && offset > 0)) {
         if (animateTimer) {
             [animateTimer invalidate];
             animateTimer = nil;
@@ -120,20 +119,13 @@
         
         didCompleteProgress = self.progress;
         endAngle = _startAngle + (_clockwise?self.progress:(-self.progress));
-        [self drawCircle:YES];
-    }else{
-        [self drawCircle:YES];
     }
+    
+    [self drawCircle:YES];
 }
 
 - (void)drawCircle:(BOOL)animate {
     CGFloat temEndAngle = endAngle;
-    
-    if (_progress == 0) {
-        temEndAngle = _startAngle;
-    }else if (_progress == 1 && endAngle > 0 && endAngle < 1) {
-        temEndAngle = 1 - _startAngle;
-    }
     
     UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.frame.size.width/2, self.frame.size.height/2) radius:(self.frame.size.width/2 - _lineWidth/2) startAngle:_startAngle*2*M_PI endAngle:temEndAngle*2*M_PI clockwise:_clockwise];
     layer.path = [path CGPath];
