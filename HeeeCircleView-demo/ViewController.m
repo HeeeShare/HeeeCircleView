@@ -29,6 +29,8 @@
     _circleView.duration = 2;
     [_circleView createCircleAnimate:YES];
     
+    
+    NSLog(@"");
 }
 
 - (IBAction)sliderValueDidChange:(UISlider *)sender {
