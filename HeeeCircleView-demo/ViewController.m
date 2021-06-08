@@ -28,6 +28,7 @@
     _circleView.progress = 0.6;
     _circleView.duration = 2;
     [_circleView createCircleAnimate:YES];
+    
 }
 
 - (IBAction)sliderValueDidChange:(UISlider *)sender {
